@@ -1,3 +1,9 @@
+# To Do Form
+- Create this ToDo Form to study how to develop a state management from 0
+
+![alt text](image.png)
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

@@ -6,7 +6,7 @@ type SetStateFn<TState> = (
 ) => void;
 
 export function createStore<TState>(
-  createState: (setState: SetStateFn<TState>) => TState,
+  createState: (setState: SetStateFn<TState>, getState: () => TState) => TState,
 ) {
   let state: TState;
   let listeners: Set<() => void>;
@@ -45,8 +45,8 @@ export function createStore<TState>(
     return useSyncExternalStore(subscribe, () => selector(state));
   }
 
-  state = createState(setState);
+  state = createState(setState, getState);
   listeners = new Set();
 
-  return { setState, getState, subscribe, useStore };
+  return useStore;
 }

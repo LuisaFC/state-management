@@ -1,8 +1,13 @@
 type SetterFn<TState> = (prevState: TState) => Partial<TState>;
+type SetStateFn<TState> = (
+  partialState: Partial<TState> | SetterFn<TState>,
+) => void;
 
-export function createStore<TState>(initialState: TState) {
-  let state = initialState;
-  const listeners = new Set<() => void>(); // Set não permite itens duplicados
+export function createStore<TState>(
+  createState: (setState: SetStateFn<TState>) => TState,
+) {
+  let state: TState;
+  let listeners: Set<() => void>;
 
   function notifyListeners() {
     listeners.forEach((listener) => listener());
@@ -32,18 +37,8 @@ export function createStore<TState>(initialState: TState) {
     return state;
   }
 
+  state = createState(setState);
+  listeners = new Set();
+
   return { setState, getState, subscribe };
 }
-
-const store = createStore({ userName: 'João', active: false, counter: 1 });
-
-store.subscribe(() => {
-  console.log(store.getState());
-});
-
-store.subscribe(() => {
-  console.log('Listener 2');
-});
-
-store.setState({ userName: 'Maria' });
-store.setState((prevState) => ({ counter: prevState.counter + 1 }));
